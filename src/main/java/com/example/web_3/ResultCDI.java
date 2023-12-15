@@ -74,5 +74,4 @@ public class ResultCDI implements Serializable {
     }
 
 
-    //TODO создать лист result, метод где создается новый обьект этот метод кнопка отправить
 }
