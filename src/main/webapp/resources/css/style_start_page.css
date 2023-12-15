@@ -1,0 +1,54 @@
+
+body {
+    font-family: "MyFont";
+    font-size: 30px;
+    background-color: #333333;
+    background-image: url('../images/squared-paper-texture.jpg');
+    background-size: cover;
+}
+
+@font-face {
+    font-family: "MyFont";
+    src: url('../fonts/Silkscreen-Regular.ttf');
+}
+
+#header {
+    height: 86px;
+    background-color: #C71585;
+    font-family: monospace;
+    padding: 12px 0;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+#clock{
+    /*color: #000;*/
+    font-weight: bold;
+    font-size: 150px;
+    text-align: center;
+    margin-top: 60px;
+    font-family: 'Orbitron', sans-serif;
+    color: #fff;
+    text-shadow:
+            0 0 1px #fff,
+            0 0 2px #fff,
+            0 0 5px #fff,
+            0 0 11px #C71585,
+            0 0 20px #C71585,
+            0 0 30px #C71585,
+            0 0 55px #C71585,
+            0 0 80px #C71585;
+}
+
+.mybutton {
+    justify-content: center;
+    font-size: 30px;
+    padding: 10px 20px;
+    margin-top: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.start_buttons {
+    justify-content: center;
+    padding-left: 43%;
+}
