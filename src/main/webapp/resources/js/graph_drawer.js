@@ -1,12 +1,15 @@
 let svgX, svgY;
 const svgNamespace = "http://www.w3.org/2000/svg";
 
+// Add a DOMContentLoaded event listener to execute the script after the document has been fully loaded.
 document.addEventListener("DOMContentLoaded", function () {
     const svg = document.querySelector('svg');
     const error = document.getElementById("errorPoints");
 
+    // Add an event listener to the SVG element for click events.
     svg.addEventListener('click', handleSvgClick);
 
+    // Handle changes in the R value (radio button selection)
     const rRadio = document.getElementById("form-with-validation:r");
     if (rRadio) {
         rRadio.addEventListener("change", handleRChange);
@@ -16,6 +19,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+// Function to handle SVG click events
 function handleSvgClick(e) {
     e.preventDefault();
 
@@ -32,6 +36,7 @@ function handleSvgClick(e) {
     savePointsToLocalStorage();
 }
 
+// Function to convert click coordinates to SVG coordinates
 function getSvgPoint(event, rValue) {
     const svg = document.querySelector('svg');
     let pt = svg.createSVGPoint();
@@ -40,6 +45,7 @@ function getSvgPoint(event, rValue) {
     return pt.matrixTransform(svg.getScreenCTM().inverse());
 }
 
+// Function to draw a point on the SVG
 function drawPoint(x, y, r) {
     const circle = document.createElementNS(svgNamespace, "circle");
     circle.setAttribute("cx", x);
@@ -51,6 +57,7 @@ function drawPoint(x, y, r) {
     svg.appendChild(circle);
 }
 
+// Function to send SVG coordinates to the server
 function sendSVG(x, y, r) {
     if (isNaN(r) || r < 1 || r > 3) {
         console.error("Invalid R value:", r);
@@ -67,11 +74,13 @@ function sendSVG(x, y, r) {
     }
 }
 
+// Function to handle changes in the R value
 function handleRChange() {
     clearPoints();
     updateSvgDisplay();
 }
 
+// Function to update the SVG display based on the R value
 function updateSvgDisplay() {
     let rValue = document.querySelector('input[name="form-with-validation:r"]:checked');
     if (rValue != null) {
@@ -91,6 +100,7 @@ function updateSvgDisplay() {
     console.log("R value:", rValue);
 }
 
+// Function to check if a point is within the defined area
 function checkArea(x, y, r) {
     x = ((x - 200) / 50).toFixed(5);
     y = ((200 - y) / 50).toFixed(5);
@@ -103,6 +113,7 @@ function checkArea(x, y, r) {
     return "red";
 }
 
+// Function to clear all points from the SVG and localStorage
 function clearPoints() {
     localStorage.setItem('points', JSON.stringify([]));
 
@@ -111,6 +122,7 @@ function clearPoints() {
     circles.forEach(circle => svg.removeChild(circle));
 }
 
+// Function to save all points from the SVG to localStorage
 function savePointsToLocalStorage() {
     const svg = document.querySelector('svg');
     const circles = svg.querySelectorAll('circle');
