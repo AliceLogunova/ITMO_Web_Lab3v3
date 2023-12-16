@@ -105,7 +105,7 @@ function checkArea(x, y, r) {
     x = ((x - 200) / 50).toFixed(5);
     y = ((200 - y) / 50).toFixed(5);
 
-    if ((x >= 0 && y >= 0 && x <= r && y <= r/2) ||
+    if ((x >= 0 && y >= 0 && x <= r && y <= r / 2) ||
         (x <= 0 && y <= 0 && ((-1 * x) + (-1 * y)) <= r) ||
         (x <= 0 && y >= 0 && ((x * x + y * y) <= r * r))) {
         return "green";

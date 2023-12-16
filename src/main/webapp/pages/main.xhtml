@@ -8,78 +8,82 @@
       xmlns:p="http://primefaces.org/ui">
 
 <h:head>
-   <title>main</title>
-   <h:outputScript library="js" name="graph_drawer.js"/>
-   <h:outputStylesheet library="css" name="style_main_page.css"/>
+    <title>main</title>
+    <h:outputScript library="js" name="graph_drawer.js"/>
+    <h:outputStylesheet library="css" name="style_main_page.css"/>
 </h:head>
 
 <h:body>
-   <div id="graphPlusForm">
-   <div id="svg"><ui:include src="/resources/svg.html" /></div>
-      <p:remoteCommand name="clickSender" action="#{resultCDI.makeResultFromSVG()}" update=":table"/>
-      <h:outputText class="error" id="errorPoints" value=""/>
+    <div id="graphPlusForm">
+        <div id="svg"><ui:include src="/resources/svg.html"/></div>
+        <p:remoteCommand name="clickSender" action="#{resultCDI.makeResultFromSVG()}" update=":table"/>
+        <h:outputText class="error" id="errorPoints" value=""/>
 
-      <h:form id="form-with-validation" autocomplete="off">
-      <div class="inputs">
-         <p:outputLabel for="r" value="R changes: "/>
-         <h:selectOneRadio id="r" value = "#{resultCDI.r}" required="true">
-            <f:selectItem itemValue = "1" itemLabel = "1" />
-            <f:selectItem itemValue = "1.5" itemLabel = "1. 5" />
-            <f:selectItem itemValue = "2" itemLabel = "2" />
-            <f:selectItem itemValue = "2.5" itemLabel = "2.5" />
-            <f:selectItem itemValue = "3" itemLabel = "3" />
-         </h:selectOneRadio>
-         <p:message for="r"/>
-      </div>
+        <h:form id="form-with-validation" autocomplete="off">
+            <div class="inputs">
+                <p:outputLabel for="r" value="R changes: "/>
+                <h:selectOneRadio id="r" value="#{resultCDI.r}" required="true">
+                    <f:selectItem itemValue="1" itemLabel="1"/>
+                    <f:selectItem itemValue="1.5" itemLabel="1. 5"/>
+                    <f:selectItem itemValue="2" itemLabel="2"/>
+                    <f:selectItem itemValue="2.5" itemLabel="2.5"/>
+                    <f:selectItem itemValue="3" itemLabel="3"/>
+                </h:selectOneRadio>
+                <p:message for="r"/>
+            </div>
 
 
-      <div class="inputs">
-         <p:outputLabel for="y" value="Y changes: "/>
-         <h:inputText id="y" maxlength="10" value="#{resultCDI.y}" placeholder="enter humber [-3; 5]" type="number" required="true">
-            <f:validateDoubleRange minimum="-3" maximum="5" />
-         </h:inputText>
-         <p:message for="y" styleClass="error"/>
-      </div>
-      <div class="inputs">
-         <p:outputLabel for="x" value="X changes: "/>
-         <p:spinner id="x" value="#{resultCDI.x}" stepFactor="-1" min="-5" max="5" styleClass="readonly-spinner"/>
-         <br/>
-      </div>
+            <div class="inputs">
+                <p:outputLabel for="y" value="Y changes: "/>
+                <h:inputText id="y" maxlength="10" value="#{resultCDI.y}" placeholder="enter humber [-3; 5]"
+                             type="number" required="true">
+                    <f:validateDoubleRange minimum="-3" maximum="5"/>
+                </h:inputText>
+                <p:message for="y" styleClass="error"/>
+            </div>
+            <div class="inputs">
+                <p:outputLabel for="x" value="X changes: "/>
+                <p:spinner id="x" value="#{resultCDI.x}" stepFactor="-1" min="-5" max="5"
+                           styleClass="readonly-spinner"/>
+                <br/>
+            </div>
 
-      <div class="buttons-container">
-         <h:button id="clearPoints" styleClass="buttons" type="reset" value="Clear graph" onclick="clearPoints()"/>
-         <h:commandButton styleClass="buttons" type="submit" value = "Send" action = "#{resultCDI.makeResult()}"/>
-         <h:commandButton styleClass="buttons" value = "Clear table" action = "#{resultCDI.deleteData()}" oncomplete="clearPoints()"/>
-         <h:button styleClass="buttons" value="Back" outcome="go-start"/>
-      </div>
-   </h:form>
-   </div>
-   <h:dataTable id="table" value="#{resultCDI.allResults}" var="result">
-      <f:facet name="res">
-         Checklist
-         <h:outputText value="Чеклист" />
-      </f:facet>
-      <h:column>
-         <f:facet name = "header">X</f:facet>
-         <h:outputText value="#{result.x}" />
-      </h:column>
-      <h:column>
-         <f:facet name = "header">Y</f:facet>
-         <h:outputText value="#{result.y}" />
-      </h:column>
-      <h:column>
-         <f:facet name = "header">R</f:facet>
-         <h:outputText value="#{result.r}" />
-      </h:column>
-      <h:column>
-         <f:facet name = "header">Collision</f:facet>
-         <h:outputText value="#{result.inside}" />
-      </h:column>
-      <h:column>
-         <f:facet name = "header">Current time</f:facet>
-         <h:outputText value="#{result.currentTime}" />
-      </h:column>
-   </h:dataTable>
+            <div class="buttons-container">
+                <h:button id="clearPoints" styleClass="buttons" type="reset" value="Clear graph"
+                          onclick="clearPoints()"/>
+                <h:commandButton styleClass="buttons" type="submit" value="Send" action="#{resultCDI.makeResult()}"/>
+                <h:commandButton styleClass="buttons" value="Clear table" action="#{resultCDI.deleteData()}"
+                                 oncomplete="clearPoints()"/>
+                <h:button styleClass="buttons" value="Back" outcome="go-start"/>
+            </div>
+        </h:form>
+    </div>
+    <h:dataTable id="table" value="#{resultCDI.allResults}" var="result">
+        <f:facet name="res">
+            Checklist
+            <h:outputText value="Чеклист"/>
+        </f:facet>
+        <h:column>
+            <f:facet name="header">X</f:facet>
+            <h:outputText value="#{result.x}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">Y</f:facet>
+            <h:outputText value="#{result.y}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">R</f:facet>
+            <h:outputText value="#{result.r}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">Collision</f:facet>
+            <h:outputText value="#{result.inside}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">Current time</f:facet>
+            <h:outputText value="#{result.currentTime}"/>
+        </h:column>
+    </h:dataTable>
 
 </h:body>
 

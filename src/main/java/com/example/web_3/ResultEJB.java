@@ -5,6 +5,7 @@ import jakarta.ejb.Stateless;
 
 import jakarta.faces.context.FacesContext;
 import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -19,10 +20,11 @@ public class ResultEJB implements Serializable {
 
     private EntityManager entityManager;
 
-    public List getAllResults(){
+    public List getAllResults() {
         return entityManager.createQuery("SELECT r FROM Result r", Result.class).getResultList();
     }
-    public void makeResult(float x,  float y, float r){
+
+    public void makeResult(float x, float y, float r) {
         String currentTime = LocalTime.now().format(DateTimeFormatter.ofPattern("kk:mm:ss"));
         boolean isInside = new CheckResult().check(x, y, r);
 
@@ -58,16 +60,12 @@ public class ResultEJB implements Serializable {
         }
     }
 
-    public void deleteData(){
+    public void deleteData() {
         entityManager.createQuery("DELETE FROM Result").executeUpdate();
     }
 
-    public void loadResult(Result res){
+    public void loadResult(Result res) {
         entityManager.persist(res);
         entityManager.flush();
     }
-
-    //метод для проверки и создания нового обьекта
-
-
 }

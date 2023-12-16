@@ -59,19 +59,20 @@ public class ResultCDI implements Serializable {
     public void setCurrentTime(String currentTime) {
         this.currentTime = currentTime;
     }
-    public void makeResult(){
+
+    public void makeResult() {
         resultEJB.makeResult(x, y, r);
     }
-    public void makeResultFromSVG(){
+
+    public void makeResultFromSVG() {
         resultEJB.makeResultFromSVG();
     }
 
-    public void deleteData(){
+    public void deleteData() {
         resultEJB.deleteData();
     }
-    public List<Result> getAllResults(){
+
+    public List<Result> getAllResults() {
         return resultEJB.getAllResults();
     }
-
-
 }
