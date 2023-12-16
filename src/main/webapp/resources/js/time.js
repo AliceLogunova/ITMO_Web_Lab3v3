@@ -1,7 +1,7 @@
 window.onload = function () {
     function getTime() {
-        var now = new Date();
-        var clock = document.getElementById("clock");
+        let now = new Date();
+        let clock = document.getElementById("clock");
         clock.innerHTML = now.toLocaleTimeString();
     }
 
