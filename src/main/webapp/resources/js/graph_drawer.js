@@ -17,6 +17,8 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
         console.error("Element with ID 'form-with-validation:r' not found.");
     }
+    loadPoints();
+
 });
 
 // Function to handle SVG click events
@@ -31,9 +33,10 @@ function handleSvgClick(e) {
     rValue = parseFloat(rValue.value);
 
     const svgPoint = getSvgPoint(e, rValue);
-    drawPoint(svgPoint.x, svgPoint.y, rValue);
+    const color = checkArea(svgPoint.x, svgPoint.y, rValue);
+    drawPoint(svgPoint.x, svgPoint.y, rValue, color);
     sendSVG(svgPoint.x, svgPoint.y, rValue);
-    savePointsToLocalStorage();
+    savePoints();
 }
 
 // Function to convert click coordinates to SVG coordinates
@@ -46,12 +49,13 @@ function getSvgPoint(event, rValue) {
 }
 
 // Function to draw a point on the SVG
-function drawPoint(x, y, r) {
+// Function to draw a point on the SVG
+function drawPoint(x, y, r, color) {
     const circle = document.createElementNS(svgNamespace, "circle");
     circle.setAttribute("cx", x);
     circle.setAttribute("cy", y);
-    circle.setAttribute("r", "3");
-    circle.setAttribute("fill", checkArea(x, y, r));
+    circle.setAttribute("r", r);
+    circle.setAttribute("fill", color);
 
     const svg = document.querySelector('svg');
     svg.appendChild(circle);
@@ -123,14 +127,20 @@ function clearPoints() {
 }
 
 // Function to save all points from the SVG to localStorage
-function savePointsToLocalStorage() {
+function savePoints() {
     const svg = document.querySelector('svg');
     const circles = svg.querySelectorAll('circle');
     const points = Array.from(circles).map(circle => ({
         x: circle.getAttribute("cx"),
         y: circle.getAttribute("cy"),
-        r: circle.getAttribute("r")
+        r: circle.getAttribute("r"),
+        color: circle.getAttribute("fill")
     }));
 
     localStorage.setItem('points', JSON.stringify(points));
+}
+
+function loadPoints() {
+    const points = JSON.parse(localStorage.getItem('points')) || [];
+    points.forEach(point => drawPoint(point.x, point.y, point.r, point.color));
 }
