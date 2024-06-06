@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="web_3" default="build" xmlns:jacoco="antlib:org.jacoco.ant">
+
+    <property file="build.properties"/>
+
+    <path id="project.classpath">
+        <fileset dir="${libs.dir}">
+            <include name="**/*.jar"/>
+        </fileset>
+        <pathelement path="${build.dir}"/>
+    </path>
+
+    <path id="classpath">
+        <fileset dir="${libs.dir}" includes="*.jar"/>
+        <fileset dir="${main.dir}" includes="*.java"/>
+    </path>
+
+    <path id="classpath.test">
+        <pathelement location="${junit}"/>
+        <pathelement location="${libs.dir}/junit-jupiter-api-5.11.0-M2.jar"/>
+        <pathelement location="${libs.dir}/apiguardian-api-1.1.2.jar"/>
+        <pathelement location="${libs.dir}/hamcrest-core-1.3.jar"/>
+        <pathelement location="${classes.dir}"/>
+    </path>
+
+    <path id="jacoco.classpath">
+        <fileset dir="${libs.dir}" includes="org.jacoco.ant-0.8.12.jar"/>
+        <fileset dir="${libs.dir}" includes="org.jacoco.core-0.8.12.jar"/>
+        <fileset dir="${libs.dir}" includes="org.jacoco.report-0.8.12.jar"/>
+        <fileset dir="${libs.dir}" includes="asm-9.7.jar"/>
+        <fileset dir="${libs.dir}" includes="asm-commons-9.2.jar"/>
+        <fileset dir="${libs.dir}" includes="asm-tree-9.2.jar"/>
+        <fileset dir="${libs.dir}" includes="asm-util-9.2.jar"/>
+    </path>
+
+    <taskdef uri="antlib:org.jacoco.ant" resource="org/jacoco/ant/antlib.xml">
+        <classpath path="C:\Users\user\OneDrive\Документы\Учёба\Бакалавр\2 курс\Web\web_3\libs\org.jacoco.ant-0.8.12.jar"/>
+    </taskdef>
+
+    <target name="compile" depends="clean">
+        <echo message="***** COMPILE STARTED *****"/>
+        <mkdir dir="${classes.dir}"/>
+        <mkdir dir="${test.classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" classpathref="classpath" includeantruntime="false"/>
+        <echo message="***** COMPILE COMPLETED *****"/>
+    </target>
+
+    <target name="build" depends="compile">
+        <echo message="***** BUILD STARTED *****"/>
+        <copy todir="${build.dir}">
+            <fileset dir="${web.dir}"/>
+        </copy>
+        <copy todir="${build.dir.libs}">
+            <fileset dir="${libs.dir}"/>
+        </copy>
+        <copy todir="${classes.dir}">
+            <fileset dir="${resources.dir}"/>
+        </copy>
+
+        <jar destfile="${build.dir}/${ant.project.name}.jar">
+            <fileset dir="${classes.dir}"/>
+            <manifest>
+                <attribute name="Created-By" value="AliskaPipiska"/>
+                <attribute name="Manifest-Version" value="1.0"/>
+                <attribute name="Main-Class" value="NoClass"/>
+            </manifest>
+        </jar>
+
+        <war destfile="${build.dir}/${ant.project.name}.war" webxml="${build.web.xml}">
+            <fileset dir="${build.dir}"/>
+            <manifest>
+                <attribute name="Created-By" value="AliskaPipiska"/>
+                <attribute name="Manifest-Version" value="1.0"/>
+                <attribute name="Main-Class" value="NoClass"/>
+            </manifest>
+        </war>
+        <echo message="***** BUILD COMPLETED *****"/>
+    </target>
+
+    <target name="clean">
+        <echo message="***** CLEAN STARTED *****"/>
+        <delete dir="${build.dir}"/>
+<!--        <delete dir="${junit.report.dir}"/>-->
+        <echo message="***** CLEAN COMPLETED *****"/>
+    </target>
+
+    <target name="test" depends="build">
+        <echo message="***** TEST STARTED *****"/>
+<!--        <mkdir dir="${test.classes.dir}"/>-->
+<!--        <mkdir dir="${junit.report.dir}"/>-->
+        <javac destdir="${test.classes.dir}" srcdir="${test.dir}" includeantruntime="false" encoding="utf-8">
+            <classpath refid="classpath.test"/>
+            <classpath>
+                <path location="${libs.dir}/org.jacoco.agent-0.8.8.jar"/>
+            </classpath>
+        </javac>
+        <junit printsummary="on" haltonfailure="true" haltonerror="true">
+            <classpath>
+                <path refid="classpath.test"/>
+                <pathelement location="${test.classes.dir}"/>
+            </classpath>
+            <batchtest fork="yes" todir="${junit.report.dir}">
+                <formatter type="xml"/>
+                <fileset dir="${test.dir}" includes="*Test.java"/>
+            </batchtest>
+        </junit>
+        <echo message="***** TEST COMPLETED *****"/>
+    </target>
+
+
+<!--    жакокоооооооо-->
+    <target name="coverage" depends="test">
+    <jacoco:coverage destfile="${junit.report.dir}/jacoco.exec">
+        <junit printsummary="yes" haltonfailure="no" showoutput="true" fork="true" forkmode="once">
+            <classpath>
+                <path refid="classpath.test"/>
+                <pathelement location="${test.classes.dir}"/>
+            </classpath>
+            <classpath>
+                <path refid="project.classpath"/>
+                <path location="${build.dir}"/>
+                <pathelement location="${libs.dir}/asm-9.2.jar"/>
+                <pathelement location="${libs.dir}/junit-4.13.2.jar"/>
+                <pathelement location="${libs.dir}/org.jacoco.agent-0.8.12.jar"/>
+                <pathelement location="${libs.dir}/hamcrest-core-1.3.jar"/>
+            </classpath>
+            <formatter type="plain" usefile="false"/>
+            <batchtest fork="true" todir="${junit.report.dir}">
+                <fileset dir="${test.classes.dir}" includes="*Test.class"/>
+            </batchtest>
+        </junit>
+    </jacoco:coverage>
+
+    <jacoco:report>
+        <executiondata>
+            <file file="${junit.report.dir}/jacoco.exec"/>
+        </executiondata>
+        <structure name="Jacoco Coverage Report">
+            <classfiles>
+                <fileset dir="${classes.dir}"/>
+            </classfiles>
+            <sourcefiles encoding="UTF-8">
+                <fileset dir="${src.dir}"/>
+            </sourcefiles>
+        </structure>
+        <html destdir="${junit.report.dir}/jacoco"/>
+    </jacoco:report>
+
+    <!-- тест кавераге -->
+    <jacoco:report>
+        <executiondata>
+            <file file="${junit.report.dir}/jacoco.exec"/>
+        </executiondata>
+        <structure name="Jacoco Coverage Analysis">
+            <classfiles>
+                <fileset dir="${classes.dir}"/>
+            </classfiles>
+            <sourcefiles encoding="UTF-8">
+                <fileset dir="${src.dir}"/>
+            </sourcefiles>
+        </structure>
+        <html destdir="${junit.report.dir}/jacoco"/>
+        <xml destfile="${junit.report.dir}/jacoco/report.xml"/>
+    </jacoco:report>
+        <loadfile property="coverageReport" srcFile="${junit.report.dir}/jacoco/index.html"/>
+        <condition property="coveragePass">
+            <contains string="${coverageReport}" substring="58 of 293"/>
+        </condition>
+        <fail message="${classes.fail}" unless="coveragePass"/>
+    </target>
+
+    <!-- Doc target -->
+    <target name="doc" depends="build">
+        <mkdir dir="${javadoc.dir}" />
+        <javadoc sourcepath="${main.dir}" destdir="${javadoc.dir}" classpathref="classpath"/>
+        <checksum file="${build.dir}/${ant.project.name}.jar" algorithm="MD5" property="file.md5"/>
+        <checksum file="${build.dir}/${ant.project.name}.jar" algorithm="SHA1" property="file.sha1"/>
+            <war destfile="${build.dir}/${ant.project.name}.war" update="true">
+                <zipfileset dir="${javadoc.dir}" prefix="doc"/>
+                <manifest>
+                    <attribute name="MD5-Digest" value="${file.md5}"/>
+                    <attribute name="SHA-1-Digest" value="${file.sha1}"/>
+                </manifest>
+            </war>
+        </target>
+
+
+
+    <!-- Team target -->
+    <target name="team" depends="build">
+        <echo message="***** TEAM STARTED *****"/>
+        <mkdir dir="${svn.dir}" />
+        <mkdir dir="${build.dir}/team" />
+        <exec executable="svn">
+            <arg value="checkout" />
+            <arg value="URL_TO_REPOSITORY" />
+            <arg value="-r" />
+            <arg value="HEAD:HEAD~3" />
+            <arg value="${svn.dir}" />
+        </exec>
+        <antcall target="build" />
+        <zip destfile="${build.dir}/team/team_builds.zip">
+            <fileset dir="${build.dir}" includes="*.jar" />
+        </zip>
+        <echo message="***** TEAM COMPLETED *****"/>
+    </target>
+</project>
